@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sadima — Encontrá tu sillón ideal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #1B2420;
+    --surface: #212C26;
+    --surface-2: #283630;
+    --ivory: #EDE6D8;
+    --muted: #93A395;
+    --brass: #C9A227;
+    --clay: #A65A3B;
+    --line: rgba(237,230,216,0.12);
+    --line-strong: rgba(237,230,216,0.22);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    color: var(--ivory);
+    font-family: 'Work Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .wrap{max-width: 1040px; margin: 0 auto; padding: 56px 24px 80px;}
+
+  .eyebrow{
+    font-size: 12px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brass);
+    font-weight: 600;
+    margin-bottom: 14px;
+  }
+  h1{
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.08;
+    margin: 0 0 16px;
+    letter-spacing: -0.01em;
+  }
+  h1 em{
+    font-style: italic;
+    color: var(--brass);
+  }
+  .lede{
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 560px;
+    margin: 0 0 48px;
+  }
+
+  .panel{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 36px;
+    margin-bottom: 28px;
+  }
+  .panel-title{
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0 0 4px;
+  }
+  .panel-sub{
+    font-size: 13px;
+    color: var(--muted);
+    margin: 0 0 28px;
+  }
+
+  .field{ margin-bottom: 28px; }
+  .field:last-child{ margin-bottom: 0; }
+  .field-label{
+    display:flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .field-label .val{
+    color: var(--brass);
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  input[type=range]{
+    -webkit-appearance:none;
+    width:100%;
+    height: 2px;
+    background: var(--line-strong);
+    border-radius: 2px;
+    outline:none;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width: 16px; height:16px;
+    border-radius: 50%;
+    background: var(--brass);
+    cursor:pointer;
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--brass);
+  }
+  input[type=range]::-moz-range-thumb{
+    width: 16px; height:16px;
+    border-radius: 50%;
+    background: var(--brass);
+    cursor:pointer;
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 1px var(--brass);
+  }
+
+  .chip-row{ display:flex; flex-wrap:wrap; gap:10px; }
+  .chip{
+    padding: 9px 16px;
+    border: 1px solid var(--line-strong);
+    border-radius: 100px;
+    font-size: 13.5px;
+    color: var(--ivory);
+    background: transparent;
+    cursor:pointer;
+    transition: all 0.15s ease;
+    font-family: 'Work Sans', sans-serif;
+  }
+  .chip:hover{ border-color: var(--brass); }
+  .chip.active{
+    background: var(--brass);
+    border-color: var(--brass);
+    color: #1B2420;
+    font-weight: 600;
+  }
+
+  .two-col{ display:grid; grid-template-columns: 1.1fr 0.9fr; gap: 28px; }
+  @media (max-width: 760px){ .two-col{ grid-template-columns: 1fr; } }
+
+  /* Room-fit visual */
+  .fit-box{
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 28px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+  }
+  .fit-label{
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+    align-self:flex-start;
+  }
+  .fit-caption{
+    font-size: 12.5px;
+    color: var(--muted);
+    margin-top: 14px;
+    text-align:center;
+  }
+  .fit-caption b{ color: var(--ivory); font-weight: 500; }
+
+  /* results */
+  .results-head{
+    display:flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin: 56px 0 20px;
+  }
+  .results-head h2{
+    font-family:'Fraunces', serif;
+    font-weight: 500;
+    font-size: 24px;
+    margin:0;
+  }
+  .results-count{ font-size: 13px; color: var(--muted); }
+
+  .card{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 28px;
+    margin-bottom: 16px;
+    display:grid;
+    grid-template-columns: 44px 96px 1fr auto;
+    gap: 22px;
+    align-items:center;
+    transition: border-color 0.15s ease;
+  }
+  @media (max-width: 640px){
+    .card{ grid-template-columns: 32px 72px 1fr; }
+    .card-right{ grid-column: 1 / -1; flex-direction:row; align-items:center; justify-content:space-between; margin-top: 8px; }
+  }
+  .card-thumb{
+    width: 96px; height: 72px;
+    border-radius: 4px;
+    overflow:hidden;
+    background: var(--surface-2);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .card-thumb img{
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+  .card-thumb.empty{
+    font-size: 10px;
+    color: var(--muted);
+    text-align:center;
+    padding: 4px;
+  }
+  @media (max-width: 640px){ .card-thumb{ width:72px; height:60px; } }
+  .card:hover{ border-color: var(--line-strong); }
+  .card.top{ border-color: var(--brass); }
+  .rank{
+    font-family:'Fraunces', serif;
+    font-size: 26px;
+    color: var(--brass);
+    opacity: 0.85;
+  }
+  .card-body h3{
+    font-family:'Fraunces', serif;
+    font-weight: 500;
+    font-size: 19px;
+    margin: 0 0 6px;
+  }
+  .card-meta{
+    font-size: 13px;
+    color: var(--muted);
+    display:flex;
+    flex-wrap:wrap;
+    gap: 6px 14px;
+  }
+  .card-why{
+    font-size: 13px;
+    color: var(--ivory);
+    opacity: 0.75;
+    margin-top: 10px;
+    font-style: italic;
+  }
+  .card-right{
+    text-align:right;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap: 10px;
+  }
+  .price{
+    font-family:'Fraunces', serif;
+    font-size: 20px;
+    color: var(--brass);
+    white-space:nowrap;
+  }
+  .price-note{ font-size: 11px; color: var(--muted); }
+  .card-link{
+    font-size: 12.5px;
+    color: var(--ivory);
+    border: 1px solid var(--line-strong);
+    padding: 7px 14px;
+    border-radius: 100px;
+    text-decoration:none;
+    white-space:nowrap;
+    transition: all 0.15s ease;
+  }
+  .card-link:hover{ border-color: var(--brass); color: var(--brass); }
+
+  .empty{
+    text-align:center;
+    padding: 40px 20px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .foot-note{
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* WhatsApp floating button */
+  .wa-float{
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999;
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    background: #25D366;
+    color: #0B1210;
+    text-decoration:none;
+    font-family: 'Work Sans', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 14px 20px 14px 16px;
+    border-radius: 100px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .wa-float:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(0,0,0,0.4);
+  }
+  .wa-float svg{ width:22px; height:22px; flex-shrink:0; }
+  @media (max-width: 520px){
+    .wa-float span{ display:none; }
+    .wa-float{ padding: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="eyebrow">Sadima · Living</div>
+  <h1>Contanos tu living.<br>Te decimos <em>cuál va</em>.</h1>
+  <p class="lede">Ajustá el espacio, el uso y el presupuesto — el recomendador cruza esos datos con el catálogo real de sillones de Sadima y te muestra las mejores opciones, a escala.</p>
+
+  <div class="panel">
+    <p class="panel-title">Tu ambiente</p>
+    <p class="panel-sub">Parámetros para encontrar el sillón ideal</p>
+
+    <div class="two-col">
+      <div>
+        <div class="field">
+          <div class="field-label"><span>Ancho disponible en la pared</span><span class="val" id="widthVal">2.4 m</span></div>
+          <input type="range" id="width" min="1.4" max="3.4" step="0.1" value="2.4">
+        </div>
+
+        <div class="field">
+          <div class="field-label"><span>Personas a sentar cómodamente</span></div>
+          <div class="chip-row" id="capacityRow">
+            <button class="chip" data-val="2">2</button>
+            <button class="chip active" data-val="3">3</button>
+            <button class="chip" data-val="4">4</button>
+            <button class="chip" data-val="5">5+</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><span>Tipo</span></div>
+          <div class="chip-row" id="typeRow">
+            <button class="chip active" data-val="cualquiera">Sin preferencia</button>
+            <button class="chip" data-val="fijo">Fijo</button>
+            <button class="chip" data-val="rinconero">Rinconero / esquinero</button>
+            <button class="chip" data-val="extensible">Extensible</button>
+            <button class="chip" data-val="cama">Sofá cama</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-label"><span>Presupuesto máximo</span><span class="val" id="budgetVal">$5.000.000</span></div>
+          <input type="range" id="budget" min="1000000" max="10000000" step="250000" value="5000000">
+        </div>
+
+        <div class="field">
+          <div class="field-label"><span>Extras</span></div>
+          <div class="chip-row" id="extrasRow">
+            <button class="chip" data-val="reclinable">Reclinable / motorizado</button>
+            <button class="chip" data-val="usb">USB / porta vasos</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fit-box">
+        <span class="fit-label">Vista en planta (a escala)</span>
+        <svg id="fitSvg" width="220" height="180" viewBox="0 0 220 180"></svg>
+        <p class="fit-caption" id="fitCaption"></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="results-head">
+    <h2>Recomendados para vos</h2>
+    <span class="results-count" id="resultsCount"></span>
+  </div>
+  <div id="results"></div>
+
+  <p class="foot-note">
+    Prototipo armado con ~15 modelos relevados del catálogo público de Sadima (living.sadima.com.ar), incluyendo precio, medidas y tipo. Para producción conviene conectarlo directo al feed de productos de la tienda (Tiendanube) para que precios y stock se actualicen solos, y sumar foto real de cada modelo.
+  </p>
+
+</div>
+
+<a class="wa-float" href="https://wa.me/5491130153645?text=Hola%2C%20quiero%20hablar%20con%20un%20asesor%20sobre%20sillones" target="_blank" rel="noopener">
+  <svg viewBox="0 0 32 32" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16 0C7.163 0 0 7.163 0 16c0 2.837.744 5.5 2.05 7.805L0 32l8.4-2.017A15.9 15.9 0 0 0 16 32c8.837 0 16-7.163 16-16S24.837 0 16 0zm0 29.09c-2.55 0-4.94-.71-6.98-1.94l-.5-.3-5.14 1.235 1.26-4.99-.325-.51A13.03 13.03 0 0 1 2.91 16C2.91 8.77 8.77 2.91 16 2.91S29.09 8.77 29.09 16 23.23 29.09 16 29.09z"/>
+    <path d="M23.36 19.29c-.4-.2-2.36-1.16-2.73-1.3-.37-.13-.63-.2-.9.2-.27.4-1.03 1.3-1.26 1.56-.23.27-.46.3-.86.1-.4-.2-1.68-.62-3.2-1.98-1.18-1.05-1.98-2.35-2.21-2.75-.23-.4-.02-.61.17-.81.18-.18.4-.46.6-.7.2-.23.27-.4.4-.66.13-.27.07-.5-.03-.7-.1-.2-.9-2.17-1.24-2.97-.33-.79-.66-.68-.9-.7-.23-.01-.5-.01-.76-.01-.27 0-.7.1-1.07.5-.37.4-1.4 1.37-1.4 3.34 0 1.97 1.43 3.87 1.63 4.14.2.27 2.8 4.28 6.8 6 .95.41 1.69.66 2.27.84.95.3 1.82.26 2.5.16.76-.11 2.36-.96 2.7-1.9.33-.93.33-1.73.23-1.9-.1-.16-.36-.26-.76-.46z"/>
+  </svg>
+  <span>Hablar con un asesor</span>
+</a>
+
+<script>
+const PRODUCTS = [
+  { name:"Sofá Rinconero Zenith Motion", type:"rinconero", width:2.9, depth:1.7, capacity:5, price:4492500, tags:["reclinable"], url:"https://www.sadima.com.ar/productos/sofa-rinconero-electrico-a79bt/", why:"Rinconero motorizado, ideal para living amplio con uso diario intensivo." },
+  { name:"Sofá Pavarotti con Chaiselongue", type:"rinconero", width:2.9, depth:1.7, capacity:5, price:4777500, tags:[], url:"https://www.sadima.com.ar/productos/rinconeros1/", why:"Chaiselongue de buen porte, pensado para recibir gente sin resignar espacio de paso." },
+  { name:"Rinconero Caetano", type:"rinconero", width:2.6, depth:1.7, capacity:4, price:4462500, tags:[], url:"https://www.sadima.com.ar/productos/rinconero-caetano-q9vw2/", why:"Rinconero de perfil compacto, aprovecha bien un ángulo del living." },
+  { name:"Rinconero Bocelli", type:"rinconero", width:3.2, depth:1.8, capacity:6, price:7209375, tags:[], url:"https://www.sadima.com.ar/productos/rinconero-bocelli/", why:"El más grande del catálogo — pensado para familias numerosas o living principal." },
+  { name:"Sofá 4 en 1 súper cómodo y versátil", type:"extensible", width:2.4, depth:1.6, capacity:4, price:2467500, tags:["reclinable"], url:"https://www.sadima.com.ar/productos/sofa-4-en-1-super-comodo-y-versatil-1wh01/", why:"Modular y versátil: se reconfigura según el día — buena relación uso/precio." },
+  { name:"Sofa Cama Block", type:"cama", width:1.8, depth:0.95, capacity:2, price:2381250, tags:[], url:"https://www.sadima.com.ar/productos/sofa-cama-du75l/", why:"Doble función living + cama, ideal para ambientes chicos o cuartos de huéspedes." },
+  { name:"Sofá Parma", type:"fijo", width:1.8, depth:0.95, capacity:2, price:2249250, tags:[], url:"https://www.sadima.com.ar/productos/sofa-parma-1fgsy/", why:"Sofá fijo prolijo para living chico o secundario, medida única compacta." },
+  { name:"Rinconero Elvis", type:"rinconero", width:2.8, depth:2.8, capacity:5, price:5998500, tags:[], url:"https://www.sadima.com.ar/productos/rinconera-elvis-1tf67/", why:"Rinconero simétrico grande, pensado para livings con espacio central de sobra." },
+  { name:"Sofá Bowie", type:"fijo", width:2.1, depth:0.95, capacity:3, price:2587500, tags:[], img:"img/bowie.png", url:"https://www.sadima.com.ar/productos/sofa-bowie/", why:"Disponible en varias medidas (1.80 a 2.80), fácil de ajustar al ancho exacto de tu pared." },
+  { name:"Sofá Pavarotti (fijo)", type:"fijo", width:2.4, depth:0.95, capacity:3, price:3281250, tags:[], img:"img/pavarotti.png", url:"https://www.sadima.com.ar/productos/sofa-pavarotti/", why:"Línea con varias medidas disponibles, buen término medio entre porte y precio." },
+  { name:"Sofá Dior", type:"fijo", width:2.1, depth:0.95, capacity:3, price:1142100, tags:[], img:"img/dior.png", url:"https://www.sadima.com.ar/productos/sofa-dior/", why:"La opción más accesible del catálogo relevado, sin resignar variedad de medidas." },
+  { name:"Sofá Bocelli con Chaiselongue", type:"rinconero", width:3.0, depth:1.7, capacity:4, price:5512500, tags:[], url:"https://www.sadima.com.ar/productos/sofa-bocelli-con-chaiselongue/", why:"Chaiselongue de gran formato, pensado para living principal con estilo marcado." },
+  { name:"Sofá Sinatra", type:"extensible", width:2.1, depth:0.95, capacity:3, price:2249250, tags:[], img:"img/sinatra.jpg", url:"https://www.sadima.com.ar/productos/extensibles1/", why:"Entre los extensibles más accesibles de la gama alta del catálogo." },
+  { name:"Sofá Floyd fijo (sillón viral)", type:"fijo", width:1.9, depth:0.95, capacity:3, price:1353000, tags:["usb"], url:"https://www.sadima.com.ar/productos/sofa-floyd-fijo-sillon-viral/", why:"El modelo más pedido de la marca, con posavasos y USB integrados." },
+  { name:"Sofá Toledo", type:"fijo", width:1.9, depth:0.9, capacity:3, price:1013454, tags:[], url:"https://www.sadima.com.ar/productos/sofa-toledo/", why:"3 cuerpos cómodo, el precio más bajo del relevamiento." },
+];
+
+const state = { width: 2.4, capacity: 3, type: "cualquiera", budget: 5000000, extras: [] };
+
+const fmt = n => "$" + n.toLocaleString("es-AR");
+
+function setupChips(rowId, key, multi){
+  const row = document.getElementById(rowId);
+  row.querySelectorAll(".chip").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      if(multi){
+        btn.classList.toggle("active");
+        state[key] = Array.from(row.querySelectorAll(".chip.active")).map(b=>b.dataset.val);
+      } else {
+        row.querySelectorAll(".chip").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        state[key] = isNaN(btn.dataset.val) ? btn.dataset.val : Number(btn.dataset.val);
+      }
+      render();
+    });
+  });
+}
+setupChips("capacityRow","capacity",false);
+setupChips("typeRow","type",false);
+setupChips("extrasRow","extras",true);
+
+const widthInput = document.getElementById("width");
+widthInput.addEventListener("input", e=>{
+  state.width = Number(e.target.value);
+  document.getElementById("widthVal").textContent = state.width.toFixed(1) + " m";
+  render();
+});
+
+const budgetInput = document.getElementById("budget");
+budgetInput.addEventListener("input", e=>{
+  state.budget = Number(e.target.value);
+  document.getElementById("budgetVal").textContent = fmt(state.budget);
+  render();
+});
+
+function score(p){
+  let s = 0;
+  // width fit: closer to available width = better, penalize if wider than space
+  const diff = p.width - state.width;
+  if(diff > 0.15) s -= (diff*40); // doesn't fit well
+  else s += 20 - Math.abs(diff)*15;
+
+  // capacity
+  s += 18 - Math.abs(p.capacity - state.capacity)*6;
+
+  // type
+  if(state.type !== "cualquiera"){
+    s += (p.type === state.type) ? 20 : -10;
+  }
+
+  // budget
+  if(p.price <= state.budget) s += 15;
+  else s -= (p.price - state.budget) / 100000;
+
+  // extras
+  state.extras.forEach(ex=>{
+    s += p.tags.includes(ex) ? 12 : -4;
+  });
+
+  return s;
+}
+
+function drawFit(topProduct){
+  const svg = document.getElementById("fitSvg");
+  svg.innerHTML = "";
+  const roomW = 220, roomH = 140, pad = 20;
+  const scale = (roomW - pad*2) / 3.4; // max width 3.4m maps to available px
+
+  // room outline
+  const room = document.createElementNS("http://www.w3.org/2000/svg","rect");
+  room.setAttribute("x", pad); room.setAttribute("y", 20);
+  room.setAttribute("width", roomW - pad*2); room.setAttribute("height", roomH);
+  room.setAttribute("fill","none"); room.setAttribute("stroke","rgba(237,230,216,0.25)");
+  room.setAttribute("stroke-dasharray","3,4");
+  svg.appendChild(room);
+
+  // available wall width marker
+  const wallW = state.width * scale;
+  const wallLine = document.createElementNS("http://www.w3.org/2000/svg","line");
+  wallLine.setAttribute("x1", pad); wallLine.setAttribute("y1", 14);
+  wallLine.setAttribute("x2", pad + wallW); wallLine.setAttribute("y2", 14);
+  wallLine.setAttribute("stroke","#93A395"); wallLine.setAttribute("stroke-width","2");
+  svg.appendChild(wallLine);
+
+  if(topProduct){
+    const sofaW = topProduct.width * scale;
+    const sofaH = 34;
+    const sofa = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    sofa.setAttribute("x", pad); sofa.setAttribute("y", 20 + roomH - sofaH - 10);
+    sofa.setAttribute("width", Math.min(sofaW, roomW-pad*2));
+    sofa.setAttribute("height", sofaH);
+    sofa.setAttribute("rx", 4);
+    sofa.setAttribute("fill", topProduct.width > state.width + 0.15 ? "rgba(166,90,59,0.55)" : "#C9A227");
+    svg.appendChild(sofa);
+  }
+
+  document.getElementById("fitCaption").innerHTML = topProduct
+    ? `<b>${topProduct.name}</b> (${topProduct.width.toFixed(2)}m) vs. tu pared de <b>${state.width.toFixed(1)}m</b>`
+    : "Ajustá los parámetros para ver la comparación";
+}
+
+function render(){
+  const scored = PRODUCTS.map(p=>({...p, s: score(p)})).sort((a,b)=>b.s-a.s);
+  const top = scored.slice(0,4);
+  const results = document.getElementById("results");
+  results.innerHTML = "";
+
+  document.getElementById("resultsCount").textContent = `${PRODUCTS.length} modelos evaluados`;
+
+  if(top.length === 0){
+    results.innerHTML = '<div class="empty">No encontramos coincidencias — probá ampliar el presupuesto o el ancho.</div>';
+  } else {
+    top.forEach((p, i)=>{
+      const card = document.createElement("div");
+      card.className = "card" + (i===0 ? " top" : "");
+      const fits = p.width <= state.width + 0.15;
+      const thumb = p.img
+        ? `<div class="card-thumb"><img src="${p.img}" alt="${p.name}" loading="lazy"></div>`
+        : `<div class="card-thumb empty">sin foto</div>`;
+      card.innerHTML = `
+        <div class="rank">${i+1}</div>
+        ${thumb}
+        <div class="card-body">
+          <h3>${p.name}</h3>
+          <div class="card-meta">
+            <span>${p.width.toFixed(2)}m × ${p.depth.toFixed(2)}m</span>
+            <span>·</span>
+            <span>${p.capacity} personas</span>
+            <span>·</span>
+            <span style="text-transform:capitalize">${p.type}</span>
+            ${!fits ? '<span style="color:#A65A3B">· más ancho que tu pared</span>' : ''}
+          </div>
+          <div class="card-why">${p.why}</div>
+        </div>
+        <div class="card-right">
+          <div class="price">${fmt(p.price)}</div>
+          <div class="price-note">con transferencia</div>
+          <a class="card-link" href="${p.url}" target="_blank" rel="noopener">Ver en la tienda →</a>
+        </div>
+      `;
+      results.appendChild(card);
+    });
+  }
+
+  drawFit(top[0]);
+}
+
+render();
+</script>
+</body>
+</html>
