@@ -191,44 +191,60 @@
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 4px;
-    padding: 28px;
+    padding: 24px;
     margin-bottom: 16px;
     display:grid;
-    grid-template-columns: 44px 96px 1fr auto;
-    gap: 22px;
+    grid-template-columns: 240px 40px 1fr auto;
+    grid-template-areas: "thumb rank body right";
+    gap: 24px;
     align-items:center;
     transition: border-color 0.15s ease;
   }
+  @media (max-width: 900px){
+    .card{ grid-template-columns: 200px 36px 1fr auto; }
+  }
   @media (max-width: 640px){
-    .card{ grid-template-columns: 32px 72px 1fr; }
-    .card-right{ grid-column: 1 / -1; flex-direction:row; align-items:center; justify-content:space-between; margin-top: 8px; }
+    .card{
+      grid-template-columns: 32px 1fr;
+      grid-template-areas:
+        "thumb thumb"
+        "rank  body"
+        "right right";
+      gap: 14px;
+      padding: 16px;
+    }
+    .card-right{ flex-direction:row; align-items:center; justify-content:space-between; margin-top: 4px; }
   }
   .card-thumb{
-    width: 96px; height: 72px;
+    grid-area: thumb;
+    width: 100%; height: 180px;
     border-radius: 4px;
     overflow:hidden;
     background: var(--surface-2);
     display:flex; align-items:center; justify-content:center;
     flex-shrink:0;
   }
+  @media (max-width: 900px){ .card-thumb{ height: 150px; } }
+  @media (max-width: 640px){ .card-thumb{ height: 220px; } }
   .card-thumb img{
     width:100%; height:100%; object-fit:cover; display:block;
   }
   .card-thumb.empty{
-    font-size: 10px;
+    font-size: 11px;
     color: var(--muted);
     text-align:center;
     padding: 4px;
   }
-  @media (max-width: 640px){ .card-thumb{ width:72px; height:60px; } }
   .card:hover{ border-color: var(--line-strong); }
   .card.top{ border-color: var(--brass); }
   .rank{
+    grid-area: rank;
     font-family:'Fraunces', serif;
     font-size: 26px;
     color: var(--brass);
     opacity: 0.85;
   }
+  .card-body{ grid-area: body; }
   .card-body h3{
     font-family:'Fraunces', serif;
     font-weight: 500;
@@ -250,6 +266,7 @@
     font-style: italic;
   }
   .card-right{
+    grid-area: right;
     text-align:right;
     display:flex;
     flex-direction:column;
