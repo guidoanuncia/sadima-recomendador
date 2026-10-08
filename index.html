@@ -375,6 +375,7 @@
             <button class="chip" data-val="rinconero">Rinconero / esquinero</button>
             <button class="chip" data-val="extensible">Extensible</button>
             <button class="chip" data-val="cama">Sofá cama</button>
+            <button class="chip" data-val="butaca">Butaca individual</button>
           </div>
         </div>
 
@@ -406,10 +407,6 @@
   </div>
   <div id="results"></div>
 
-  <p class="foot-note">
-    Prototipo armado con ~15 modelos relevados del catálogo público de Sadima (living.sadima.com.ar), incluyendo precio, medidas y tipo. Para producción conviene conectarlo directo al feed de productos de la tienda (Tiendanube) para que precios y stock se actualicen solos, y sumar foto real de cada modelo.
-  </p>
-
 </div>
 
 <a class="wa-float" href="https://wa.me/5491130153645?text=Hola%2C%20quiero%20hablar%20con%20un%20asesor%20sobre%20sillones" target="_blank" rel="noopener">
@@ -422,21 +419,32 @@
 
 <script>
 const PRODUCTS = [
-  { name:"Sofá Rinconero Zenith Motion", type:"rinconero", width:2.9, depth:1.7, capacity:5, price:4492500, tags:["reclinable"], url:"https://www.sadima.com.ar/productos/sofa-rinconero-electrico-a79bt/", why:"Rinconero motorizado, ideal para living amplio con uso diario intensivo." },
-  { name:"Sofá Pavarotti con Chaiselongue", type:"rinconero", width:2.9, depth:1.7, capacity:5, price:4777500, tags:[], url:"https://www.sadima.com.ar/productos/rinconeros1/", why:"Chaiselongue de buen porte, pensado para recibir gente sin resignar espacio de paso." },
-  { name:"Rinconero Caetano", type:"rinconero", width:2.6, depth:1.7, capacity:4, price:4462500, tags:[], url:"https://www.sadima.com.ar/productos/rinconero-caetano-q9vw2/", why:"Rinconero de perfil compacto, aprovecha bien un ángulo del living." },
-  { name:"Rinconero Bocelli", type:"rinconero", width:3.2, depth:1.8, capacity:6, price:7209375, tags:[], url:"https://www.sadima.com.ar/productos/rinconero-bocelli/", why:"El más grande del catálogo — pensado para familias numerosas o living principal." },
-  { name:"Sofá 4 en 1 súper cómodo y versátil", type:"extensible", width:2.4, depth:1.6, capacity:4, price:2467500, tags:["reclinable"], url:"https://www.sadima.com.ar/productos/sofa-4-en-1-super-comodo-y-versatil-1wh01/", why:"Modular y versátil: se reconfigura según el día — buena relación uso/precio." },
-  { name:"Sofa Cama Block", type:"cama", width:1.8, depth:0.95, capacity:2, price:2381250, tags:[], url:"https://www.sadima.com.ar/productos/sofa-cama-du75l/", why:"Doble función living + cama, ideal para ambientes chicos o cuartos de huéspedes." },
-  { name:"Sofá Parma", type:"fijo", width:1.8, depth:0.95, capacity:2, price:2249250, tags:[], url:"https://www.sadima.com.ar/productos/sofa-parma-1fgsy/", why:"Sofá fijo prolijo para living chico o secundario, medida única compacta." },
-  { name:"Rinconero Elvis", type:"rinconero", width:2.8, depth:2.8, capacity:5, price:5998500, tags:[], url:"https://www.sadima.com.ar/productos/rinconera-elvis-1tf67/", why:"Rinconero simétrico grande, pensado para livings con espacio central de sobra." },
+  { name:"Sofá Rinconero Zenith Motion", type:"rinconero", width:2.9, depth:1.7, capacity:5, price:4492500, tags:["reclinable"], img:"img/zenith-motion.jpg", url:"https://www.sadima.com.ar/productos/sofa-rinconero-electrico-a79bt/", why:"Rinconero motorizado, ideal para living amplio con uso diario intensivo." },
+  { name:"Sofá Pavarotti con Chaiselongue", type:"rinconero", width:2.9, depth:1.7, capacity:5, price:4777500, tags:[], img:"img/pavarotti-chaiselongue.png", url:"https://www.sadima.com.ar/productos/rinconeros1/", why:"Chaiselongue de buen porte, pensado para recibir gente sin resignar espacio de paso." },
+  { name:"Rinconero Caetano", type:"rinconero", width:2.6, depth:1.7, capacity:4, price:4462500, tags:[], img:"img/rinconero-caetano.png", url:"https://www.sadima.com.ar/productos/rinconero-caetano-q9vw2/", why:"Rinconero de perfil compacto, aprovecha bien un ángulo del living." },
+  { name:"Rinconero Bocelli", type:"rinconero", width:3.2, depth:1.8, capacity:6, price:7209375, tags:[], img:"img/rinconero-bocelli.png", url:"https://www.sadima.com.ar/productos/rinconero-bocelli/", why:"El más grande del catálogo — pensado para familias numerosas o living principal." },
+  { name:"Sofa Cama Block", type:"cama", width:1.8, depth:0.95, capacity:2, price:2381250, tags:[], img:"img/cama-block.png", url:"https://www.sadima.com.ar/productos/sofa-cama-du75l/", why:"Doble función living + cama, ideal para ambientes chicos o cuartos de huéspedes." },
+  { name:"Sofá Parma", type:"fijo", width:1.8, depth:0.95, capacity:2, price:2249250, tags:[], img:"img/parma.png", url:"https://www.sadima.com.ar/productos/sofa-parma-1fgsy/", why:"Sofá fijo prolijo para living chico o secundario, medida única compacta." },
+  { name:"Rinconero Elvis", type:"rinconero", width:2.8, depth:2.8, capacity:5, price:5998500, tags:[], img:"img/rinconero-elvis.png", url:"https://www.sadima.com.ar/productos/rinconera-elvis-1tf67/", why:"Rinconero simétrico grande, pensado para livings con espacio central de sobra." },
   { name:"Sofá Bowie", type:"fijo", width:2.1, depth:0.95, capacity:3, price:2587500, tags:[], img:"img/bowie.png", url:"https://www.sadima.com.ar/productos/sofa-bowie/", why:"Disponible en varias medidas (1.80 a 2.80), fácil de ajustar al ancho exacto de tu pared." },
   { name:"Sofá Pavarotti (fijo)", type:"fijo", width:2.4, depth:0.95, capacity:3, price:3281250, tags:[], img:"img/pavarotti.png", url:"https://www.sadima.com.ar/productos/sofa-pavarotti/", why:"Línea con varias medidas disponibles, buen término medio entre porte y precio." },
   { name:"Sofá Dior", type:"fijo", width:2.1, depth:0.95, capacity:3, price:1142100, tags:[], img:"img/dior.png", url:"https://www.sadima.com.ar/productos/sofa-dior/", why:"La opción más accesible del catálogo relevado, sin resignar variedad de medidas." },
-  { name:"Sofá Bocelli con Chaiselongue", type:"rinconero", width:3.0, depth:1.7, capacity:4, price:5512500, tags:[], url:"https://www.sadima.com.ar/productos/sofa-bocelli-con-chaiselongue/", why:"Chaiselongue de gran formato, pensado para living principal con estilo marcado." },
+  { name:"Sofá Bocelli con Chaiselongue", type:"rinconero", width:3.0, depth:1.7, capacity:4, price:5512500, tags:[], img:"img/bocelli-chaiselongue.jpg", url:"https://www.sadima.com.ar/productos/sofa-bocelli-con-chaiselongue/", why:"Chaiselongue de gran formato, pensado para living principal con estilo marcado." },
   { name:"Sofá Sinatra", type:"extensible", width:2.1, depth:0.95, capacity:3, price:2249250, tags:[], img:"img/sinatra.jpg", url:"https://www.sadima.com.ar/productos/extensibles1/", why:"Entre los extensibles más accesibles de la gama alta del catálogo." },
-  { name:"Sofá Floyd fijo (sillón viral)", type:"fijo", width:1.9, depth:0.95, capacity:3, price:1353000, tags:["usb"], url:"https://www.sadima.com.ar/productos/sofa-floyd-fijo-sillon-viral/", why:"El modelo más pedido de la marca, con posavasos y USB integrados." },
-  { name:"Sofá Toledo", type:"fijo", width:1.9, depth:0.9, capacity:3, price:1013454, tags:[], url:"https://www.sadima.com.ar/productos/sofa-toledo/", why:"3 cuerpos cómodo, el precio más bajo del relevamiento." },
+  { name:"Sofá Floyd fijo (sillón viral)", type:"fijo", width:1.9, depth:0.95, capacity:3, price:1353000, tags:["usb"], img:"img/floyd-fijo.png", url:"https://www.sadima.com.ar/productos/sofa-floyd-fijo-sillon-viral/", why:"El modelo más pedido de la marca, con posavasos y USB integrados." },
+  { name:"Sofá 4 en 1 súper cómodo y versátil", type:"extensible", width:2.4, depth:1.6, capacity:4, price:2467500, tags:["reclinable"], img:"img/4-en-1.png", url:"https://www.sadima.com.ar/productos/sofa-4-en-1-super-comodo-y-versatil-1wh01/", why:"Modular y versátil: se reconfigura según el día — buena relación uso/precio." },
+  { name:"Sofá Toledo", type:"fijo", width:1.9, depth:0.9, capacity:3, price:1013454, tags:[], img:"img/toledo.jpg", url:"https://www.sadima.com.ar/productos/sofa-toledo/", why:"3 cuerpos cómodo, el precio más bajo del relevamiento." },
+  { name:"Sofá Madonna", type:"fijo", width:2.1, depth:0.95, capacity:3, price:2558250, tags:[], img:"img/madonna.png", url:"https://www.sadima.com.ar/productos/sofa-madonna/", why:"Chaise longue de líneas prolijas, buen término medio de precio dentro del catálogo." },
+  { name:"Sofá Lenine", type:"extensible", width:2.1, depth:0.95, capacity:3, price:3217500, tags:[], img:"img/lenine.png", url:"https://www.sadima.com.ar/productos/", why:"Cumple triple función: sofá, cama y extensible — ideal si el living también recibe visitas a dormir." },
+  { name:"Sofá Thiara", type:"extensible", width:1.8, depth:0.95, capacity:3, price:2333925, tags:["usb"], img:"img/thiara.png", url:"https://www.sadima.com.ar/productos/sofa-thiara/", why:"Asientos extensibles con cargador USB integrado, disponible en varias medidas (1.80 a 2.90)." },
+  { name:"Sofá Velvet con Chaiselongue", type:"rinconero", width:2.9, depth:1.7, capacity:5, price:3726938, tags:[], img:"img/velvet-chaiselongue.png", url:"https://www.sadima.com.ar/productos/sofa-velvet-con-chaiselongue/", why:"Rinconero de buen porte, línea Velvet de la casa." },
+  { name:"Relax Jackson", type:"butaca", width:0.85, depth:0.9, capacity:1, price:2167500, tags:["reclinable","usb"], img:"img/relax-jackson.png", url:"https://www.sadima.com.ar/living/relax-y-butacas/", why:"Sillón reclinable individual con posavasos integrados, ideal para ver series." },
+  { name:"Sinatra con Chaiselongue", type:"rinconero", width:2.4, depth:1.7, capacity:4, price:4938750, tags:[], img:"img/sinatra-chaiselongue.png", url:"https://www.sadima.com.ar/productos/", why:"Asientos extensibles, 3 cabezales retráctiles y baúl funcional a lo largo del chaiselongue." },
+  { name:"Sofá Toledo extensible", type:"extensible", width:2.1, depth:0.95, capacity:3, price:2362500, tags:[], img:"img/toledo-extensible.png", url:"https://www.sadima.com.ar/productos/", why:"Respaldo con almohadones altos y asientos extensibles, disponible en 1, 2 o 3 cuerpos." },
+  { name:"Butaca Giratoria", type:"butaca", width:0.9, depth:0.75, capacity:1, price:1860000, tags:[], img:"img/butaca-giratoria.png", url:"https://www.sadima.com.ar/productos/butaca-giratoria/", why:"Butaca individual giratoria, ideal como segundo asiento o para un rincón de lectura." },
+  { name:"Butaca Chandon Giratoria", type:"butaca", width:0.85, depth:0.8, capacity:1, price:2182500, tags:["reclinable"], img:"img/butaca-chandon-giratoria.png", url:"https://www.sadima.com.ar/productos/sofa-betania-cuero/", why:"Butaca giratoria de diseño, buen complemento visual para un living con estilo marcado." },
+  { name:"Butaca Cerati", type:"butaca", width:0.8, depth:0.75, capacity:1, price:667500, tags:[], img:"img/butaca-cerati.png", url:"https://www.sadima.com.ar/productos/reclinables1/", why:"La butaca individual más accesible del catálogo relevado." },
+  { name:"Butaca Ivette", type:"butaca", width:0.85, depth:0.85, capacity:1, price:1900000, tags:["reclinable"], img:"img/butaca-ivette.png", url:"https://www.sadima.com.ar/productos/", why:"Giratoria y reclinable, disponible en cuero o tela." },
 ];
 
 const state = { width: 2.4, capacity: 3, type: "cualquiera", budget: 5000000, extras: [] };
