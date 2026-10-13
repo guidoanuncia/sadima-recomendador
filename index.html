@@ -599,13 +599,13 @@ function view(p){
   const z = fit.length
     ? fit.reduce(better)
     : p.sizes.reduce((a,b)=> b.w < a.w ? b : a);
-  return {...p, width:z.w, depth:z.d, capacity:z.c, price:z.p, approx:!!z.a, sizeLabel:z.l};
+  return {...p, width:z.w, depth:z.d, capacity:z.c, price:z.p, approx:!!z.a, vid:z.vid||null, sizeLabel:z.l};
 }
 
 const chosen = {};
 function applySize(p){
   const z = chosen[p.name] && p.sizes.find(x=>x.l===chosen[p.name]);
-  return z ? {...p, width:z.w, depth:z.d, capacity:z.c, price:z.p, approx:!!z.a, sizeLabel:z.l} : p;
+  return z ? {...p, width:z.w, depth:z.d, capacity:z.c, price:z.p, approx:!!z.a, vid:z.vid||null, sizeLabel:z.l} : p;
 }
 
 function render(){
@@ -647,7 +647,7 @@ function render(){
           <div class="price-note">${p.sizes.length>1 ? "con transferencia · medida "+p.sizeLabel : "con transferencia"}</div>
           ${p.approx ? '<div class="price-note">Medida estimada · confirmar con un asesor</div>' : ''}
           ${p.note ? `<div class="price-note">${p.note}</div>` : ''}
-          <a class="card-link" href="${p.url}" target="_blank" rel="noopener">Ver en la tienda →</a>
+          <a class="card-link" href="${p.url}${p.vid?`?variant=${p.vid}`:''}" target="_blank" rel="noopener">Ver en la tienda →</a>
         </div>
       `;
       card.querySelectorAll('.size-pill').forEach(btn=>btn.addEventListener('click',()=>{
@@ -661,6 +661,40 @@ function render(){
 }
 
 render();
+
+// ---- Datos en vivo de Tiendanube (precios y variantes) vía /api/products ----
+function sizeKey(label){
+  const s = String(label).toLowerCase();
+  if(/cuerpo|cpo/.test(s)) return "1c";
+  const m = s.match(/(\d)[,.](\d{1,2})/);
+  return m ? (m[1]+"."+(m[2]+"0").slice(0,2)) : null;
+}
+function productHandle(url){ return url.split("/").filter(Boolean).pop(); }
+function applyLive(data){
+  const byHandle = {};
+  (data.products||[]).forEach(lp=>{ if(lp.published) byHandle[lp.handle]=lp; });
+  PRODUCTS.forEach(p=>{
+    const lp = byHandle[productHandle(p.url)];
+    if(!lp) return;
+    p.sizes.forEach(z=>{
+      const k = sizeKey(z.l);
+      let cands = lp.variants.filter(v=>{
+        const text = v.values.join(" ");
+        return k ? v.values.some(val=>sizeKey(val)===k) : lp.variants.length===1;
+      });
+      if(!cands.length && p.sizes.length===1 && lp.variants.length===1) cands = lp.variants;
+      if(!cands.length) return;
+      // preferir la variante sin accesorios/cromados; luego la más barata
+      const bad = v => /accesorio|cromad/i.test(v.values.join(" "));
+      cands.sort((a,b)=> (bad(a)-bad(b)) || ((a.promo||a.price||0)-(b.promo||b.price||0)));
+      const v = cands[0];
+      z.vid = v.id;
+      const list = v.promo || v.price;
+      if(list) z.p = Math.round(list * 0.75);
+    });
+  });
+}
+fetch("/api/products").then(r=>r.ok?r.json():null).then(d=>{ if(d && d.products){ applyLive(d); render(); } }).catch(()=>{});
 </script>
 </body>
 </html>
